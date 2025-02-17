@@ -13,10 +13,18 @@ A full-stack web application for managing contacts, built with React.js (fronten
 ✅ Update Contact – Modify name, email, phone, etc.
 
 ✅ Change Photo – Upload & replace profile pictures
-			
-✅ Responsive UI – Works on desktop & mobile
+
+✅ Delete Contact - Remove a selected contact
 
 ✅ Notifications - Provided with React-Toastify
+
+
+🏃 To Run
+
+```
+open bash on backend folder: mvn spring-boot:run
+open bash on frontend folder: npm start
+```
 
 
 
