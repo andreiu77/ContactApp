@@ -571,7 +571,6 @@ input[type=file]::file-selector-button {
 	border: none;
 	box-shadow: 0 0 2px var(--black_80);
 	transition: 0.2s ease-out;
-	/* content: ""; */
 }
 
 input[type=file]::file-selector-button:hover {
@@ -587,6 +586,19 @@ input[type=file]::file-selector-button:hover {
 
 .form_footer .btn {
 	padding: 7px 15px;
+}
+
+.form_footer .btndel {
+	padding: 7px 15px;
+	color: white;
+	background-color: red;
+	font-family: 'Roboto', monospace;
+    font-weight: bold;
+	font-size: .8rem;
+	white-space: normal;
+	border-radius: var(--radius-5);
+	box-shadow: 0 0 2px var(--black_80);
+	transition: 0.2s ease-out;
 }
 
 @media(max-width: 584px) {

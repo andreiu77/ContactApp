@@ -4,8 +4,8 @@ import Header from './components/Header';
 import ContactList from './components/ContactList';
 import ContactDetail from './components/ContactDetail';
 import { getContacts, saveContact, updatePhoto } from './api/ContactService';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { toastError } from './api/ToastService';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { toastError, toastSuccess } from './api/ToastService';
 import { ToastContainer } from 'react-toastify';
 
 function App() {
@@ -44,10 +44,12 @@ function App() {
     try {
       const { data } = await saveContact(values);
       //console.log(data);
-      const formData = new FormData();
-      formData.append('file', file, file.name);
-      formData.append('id', data.id);
-      const { data: photoUrl } = await updatePhoto(formData);
+      if(file){
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+        formData.append('id', data.id); 
+        const { data: photoUrl } = await updatePhoto(formData);
+      }
       toggleModal(false);
       //console.log(photoUrl);
       setFile(undefined);
@@ -59,11 +61,12 @@ function App() {
         title: '',
         status: ''
       })
+      toastSuccess("Contact Added");
       getAllContacts();
     }
     catch (error) {
       console.log(error);
-      toastError(error.message);
+      //toastError(error.message);
     }
   };
 
@@ -90,9 +93,10 @@ function App() {
 
   const toggleModal = show => show ? modalRef.current.showModal() : modalRef.current.close();
 
+  const location = useLocation();  //for refreshing
   useEffect(() => {
     getAllContacts();
-  }, []);
+  }, [location]);
 
   return (
     <>
@@ -138,7 +142,7 @@ function App() {
               </div>
               <div className="file-input">
                 <span className="details">Profile Photo</span>
-                <input type="file" onChange={(event) => { setFile(event.target.files[0]); console.log(event.target.files[0]) }} ref={fileRef} name='photo' required />
+                <input type="file" onChange={(event) => { setFile(event.target.files[0]); console.log(event.target.files[0]) }} ref={fileRef} name='photo' />
               </div>
             </div>
             <div className="form_footer">

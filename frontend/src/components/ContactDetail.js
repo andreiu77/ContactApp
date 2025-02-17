@@ -1,9 +1,10 @@
 import { React, useState, useEffect, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { getContact } from '../api/ContactService';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { deleteContact, getContact } from '../api/ContactService';
 import { toastError, toastSuccess } from '../api/ToastService';
 
 const ContactDetail = ({ updateContact, updateImage }) => {
+    const navigate = useNavigate();
     const inputRef = useRef();
     const [contact, setContact] = useState({
         id: '',
@@ -41,6 +42,7 @@ const ContactDetail = ({ updateContact, updateImage }) => {
             formData.append('file', file, file.name);
             formData.append('id', id);
             await updateImage(formData);
+            //might not update instantly due to browser caching
             setContact((prev) => ({ ...prev, photoUrl: `${prev.photoUrl}?updated_at=${new Date().getTime()}` }));
             toastSuccess('Photo Updated');
         }
@@ -57,15 +59,27 @@ const ContactDetail = ({ updateContact, updateImage }) => {
 
     const onUpdateContact = async (event) => {
         event.preventDefault();
-        await updateContact(contact);        
+        await updateContact(contact);
         fetchContact(id);
         toastSuccess('Contact Updated');
     };
 
+    const deleteCurrentContact = async () => {
+        try {
+            await deleteContact(id);
+            toastSuccess('Contact Deleted');
+            navigate('/contacts');   
+        }
+        catch (error) {
+            console.log(error);
+            toastError(error.message);
+        }
+    }
+
     useEffect(() => {
         fetchContact(id);
     }, []);
-    
+
 
     return (
         <>
@@ -106,6 +120,7 @@ const ContactDetail = ({ updateContact, updateImage }) => {
                             </div>
                             <div className="form_footer">
                                 <button type="submit" className="btn">Save</button>
+                                <button type="button" onClick={deleteCurrentContact} className="btndel">Delete</button>
                             </div>
                         </form>
                     </div>
